@@ -163,77 +163,79 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 padding: const EdgeInsets.only(top: 35, bottom: 25, left: 20, right: 20),
                 width: double.infinity,
                 height: height,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 20),
-                    Text('Pilih $tipe', style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    InputComponent(controller: sumber, hintText: 'Cari kota atau kabupaten'),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text('Pencarian Terbaik', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        // TextButton(onPressed: () {}, child: const Text('Hapus', style: TextStyle(color: Colors.red))),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    ...listTujuanFiltered.map(
-                      (val) => Material(
-                        child: InkWell(
-                          onTap: () {
-                            if (mounted) {
-                              setState(() {
-                                if (tipe == 'Tujuan') {
-                                  tujuanController.text = val['namaLengkap'];
-                                  tujuanControllerId.text = val['id'].toString();
-                                } else if (tipe == 'Asal') {
-                                  asalController.text = val['namaLengkap'];
-                                  asalControllerId.text = val['id'].toString();
-                                }
-                              });
-                              // pemesananProvider.set(tipe, val['id']);
-                            }
-                            Navigator.of(context).pop();
-                          },
-                          child: Ink(
-                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                            color: Colors.white,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(IconlyLight.home, size: 33),
-                                    const SizedBox(width: 10),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(val['namaLengkap'], style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                                        const SizedBox(height: 5),
-                                        const Text('Riau, Indonesia', style: TextStyle(fontSize: 15, color: Colors.black45)),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(14),
-                                    color: const Color(0xB32459A9),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 20),
+                      Text('Pilih $tipe', style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 5),
+                      InputComponent(controller: sumber, hintText: 'Cari kota atau kabupaten'),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text('Pencarian Terbaik', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          // TextButton(onPressed: () {}, child: const Text('Hapus', style: TextStyle(color: Colors.red))),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      ...listTujuanFiltered.map(
+                        (val) => Material(
+                          child: InkWell(
+                            onTap: () {
+                              if (mounted) {
+                                setState(() {
+                                  if (tipe == 'Tujuan') {
+                                    tujuanController.text = val['namaLengkap'];
+                                    tujuanControllerId.text = val['id'].toString();
+                                  } else if (tipe == 'Asal') {
+                                    asalController.text = val['namaLengkap'];
+                                    asalControllerId.text = val['id'].toString();
+                                  }
+                                });
+                                // pemesananProvider.set(tipe, val['id']);
+                              }
+                              Navigator.of(context).pop();
+                            },
+                            child: Ink(
+                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                              color: Colors.white,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(IconlyLight.home, size: 33),
+                                      const SizedBox(width: 10),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(val['namaLengkap'], style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                                          const SizedBox(height: 5),
+                                          const Text('Riau, Indonesia', style: TextStyle(fontSize: 15, color: Colors.black45)),
+                                        ],
+                                      )
+                                    ],
                                   ),
-                                  child: Text(val['namaSingkatan'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                                )
-                              ],
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14),
+                                      color: const Color(0xB32459A9),
+                                    ),
+                                    child: Text(val['namaSingkatan'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Positioned(

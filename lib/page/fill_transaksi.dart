@@ -46,7 +46,6 @@ class _FillTransaksiPageState extends State<FillTransaksiPage> {
 
     for (var _ in pemesananProvider.listKursi) {
       if (mounted) setState(() => kursiController.add(TextEditingController()));
-      print(kursiController[0].text);
     }
   }
 

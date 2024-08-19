@@ -138,7 +138,6 @@ class _FormJadwalPageState extends State<FormJadwalPage> {
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
-        print(responseBody);
         if (responseBody['id'] != null && mounted) setState(() => kapasitasPenumpang = responseBody['jumlahPenumpang']);
       }
     }

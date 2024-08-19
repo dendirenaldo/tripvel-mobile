@@ -8,7 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 
 class MapFunctionality {
-  static Future<Position> getCurrentLocation() async {
+  static Future<Position?> getCurrentLocation() async {
     LocationPermission permission;
 
     // Check if location services are enabled

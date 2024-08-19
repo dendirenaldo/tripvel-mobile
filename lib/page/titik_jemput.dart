@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:tripvel/component/button_component.dart';
 import 'package:tripvel/constant/map_constants.dart';
+import 'package:tripvel/functionality/map_functionality.dart';
 import 'package:tripvel/page/pilih_order.dart';
 import 'package:tripvel/provider/auth_provider.dart';
 import 'package:http/http.dart' as http;
@@ -66,7 +67,19 @@ class _TitikJemputPageState extends State<TitikJemputPage> {
         center = LatLng(double.parse(responseBody['asal']['latitude'].toString()), double.parse(responseBody['asal']['longitude'].toString()));
         mapController.move(center, 15);
         getPlaceName(double.parse(responseBody['asal']['latitude'].toString()), double.parse(responseBody['asal']['longitude'].toString()));
+        setLocation();
       }
+    }
+  }
+
+  Future<void> setLocation() async {
+    final locationData = (await MapFunctionality.getCurrentLocation());
+
+    if (locationData != null && mounted) {
+      setState(() {
+        center = LatLng(locationData.latitude, locationData.longitude);
+        mapController.move(center, 15);
+      });
     }
   }
 
