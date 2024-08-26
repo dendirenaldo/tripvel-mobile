@@ -32,6 +32,7 @@ class _InfoTransaksiPageState extends State<InfoTransaksiPage> {
   late final String accessToken;
   late bool _isLoading;
   late bool _isAbleToBatal;
+  late bool _isAbleToDelete;
   XFile? buktiPembayaran;
   CroppedFile? croppedBuktiPembayaran;
   late dynamic profile;
@@ -47,8 +48,13 @@ class _InfoTransaksiPageState extends State<InfoTransaksiPage> {
       if (mounted) setState(() => data = jsonDecode(response.body));
 
       if (data != null && data!['statusPenjemputan'] == null) {
-        if (profile['role'] == 'Admin' || profile['role'] == 'Travel' && data!['statusPembayaran'] != 'Lunas') {
+        if ((profile['role'] == 'Admin' || profile['role'] == 'Travel') && data!['statusPembayaran'] != 'Lunas') {
           _isAbleToBatal = true;
+
+          if (data!['statusPembayaran'] == 'Batal') {
+            print('ssa');
+            _isAbleToDelete = true;
+          }
         } else if (profile['role'] == 'Penumpang' && data!['metodePembayaran'] == 'Tunai') {
           _isAbleToBatal = false;
         } else {
@@ -82,6 +88,57 @@ class _InfoTransaksiPageState extends State<InfoTransaksiPage> {
         );
       },
     );
+  }
+
+  Future<void> hapus(BuildContext context) async {
+    if (mounted) setState(() => _isLoading = true);
+    final response = await http.delete(
+      Uri.parse("${dotenv.env['RESTFUL_API']}/transaksi/${widget.id}"),
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+    final Map<String, dynamic> responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Berhasil"),
+            content: const Text("Transaksi telah berhasil dihapuskan!"),
+            actions: [
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Gagal"),
+            content: Text(responseBody['message']),
+            actions: [
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    if (mounted) setState(() => _isLoading = false);
   }
 
   Future<void> batalkanPemesanan() async {
@@ -237,6 +294,7 @@ class _InfoTransaksiPageState extends State<InfoTransaksiPage> {
     super.initState();
     _isLoading = true;
     _isAbleToBatal = false;
+    _isAbleToDelete = false;
     data = null;
     profile = null;
 
@@ -378,12 +436,21 @@ class _InfoTransaksiPageState extends State<InfoTransaksiPage> {
                     ),
                   ),
                 if (data != null && data!['statusPembayaran'] == 'Belum Lunas' && data!['metodePembayaran'] == 'Transfer') const SizedBox(height: 10),
-                if (_isAbleToBatal == true)
+                if (_isAbleToBatal == true && _isAbleToDelete == false)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: ButtonComponent(
                       label: 'Batalkan Pemesanan',
                       onClick: batalkan,
+                      color: 0xFFFF0000,
+                    ),
+                  ),
+                if (_isAbleToBatal == true && _isAbleToDelete == true)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: ButtonComponent(
+                      label: 'Hapus Pemesanan',
+                      onClick: () => hapus(context),
                       color: 0xFFFF0000,
                     ),
                   ),
